@@ -1,0 +1,34 @@
+use ecommerce;
+
+
+db.reviews.insertMany (  [
+  { customer_name: "Alice", product_id: "P101", category: "Electronics", rating: 4, comment: "Good quality, fast delivery.", review_date: ISODate("2025-09-01") },
+  { customer_name: "Bob",   product_id: "P101", category: "Electronics", rating: 5, comment: "Excellent product!", review_date: ISODate("2025-09-02") },
+  { customer_name: "Charlie", product_id: "P102", category: "Books", rating: 3, comment: "Decent read but slow shipping.", review_date: ISODate("2025-09-03") },
+  { customer_name: "David", product_id: "P103", category: "Clothing", rating: 2, comment: "Poor quality material.", review_date: ISODate("2025-09-04") },
+  { customer_name: "Emma", product_id: "P102", category: "Books", rating: 4, comment: "Enjoyed the book!", review_date: ISODate("2025-09-05") }
+]);
+
+
+db.reviews.find( );
+
+db.reviews.aggregate([  { $group: { _id: "$product_id", total_reviews: { $sum: 1 } } } ])
+
+
+db.reviews.aggregate([
+  { $group: { _id: "$product_id", avg_rating: { $avg: "$rating" } } }, // Stage 1: Group
+  { $sort: { avg_rating: -1 } }				       // Stage 2: Sort	
+])
+
+db.reviews.aggregate([
+  { $group: { _id: "$product_id", total_reviews: { $sum: 1 } } }, // Stage 1: Group
+  { $sort: { total_reviews: -1 } }, 			            // Stage 2: Sort
+  { $limit: 5 } 				                             // Stage 3: Limit to Top 5
+])
+
+
+db.reviews.aggregate([
+  		           { $group: { _id: "$category", avg_rating: { $avg: "$rating" } } }
+    		           ])
+
+
